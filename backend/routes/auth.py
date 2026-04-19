@@ -43,7 +43,8 @@ async def register(user: UserCreate, response: Response):
         value=f"Bearer {access_token}",
         httponly=True,
         max_age=settings.access_token_expire_minutes * 60,
-        samesite="lax",
+        samesite="none",
+        secure=True,
     )
     return {"access_token": access_token, "token_type": "bearer"}
 
@@ -63,7 +64,8 @@ async def login(req: LoginRequest, response: Response):
         value=f"Bearer {access_token}",
         httponly=True,
         max_age=settings.access_token_expire_minutes * 60,
-        samesite="lax",
+        samesite="none",
+        secure=True,
     )
     return {"access_token": access_token, "token_type": "bearer"}
 
@@ -100,7 +102,8 @@ async def google_auth(req: GoogleAuthRequest, response: Response):
             value=f"Bearer {access_token}",
             httponly=True,
             max_age=settings.access_token_expire_minutes * 60,
-            samesite="lax",
+            samesite="none",
+            secure=True,
         )
         return {"access_token": access_token, "token_type": "bearer"}
     except ValueError as e:
