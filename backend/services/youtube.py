@@ -23,30 +23,76 @@ async def fetch_channel_data(handle: str) -> dict:
                 handle = handle[1:]
             query_param = f"forHandle={handle}"
             
-        url = f"https://www.googleapis.com/youtube/v3/channels?part=statistics,snippet,contentDetails&{query_param}&key={settings.youtube_api_key}"
-        async with httpx.AsyncClient() as client:
-            resp = await client.get(url)
-            data = resp.json()
-            if "error" in data:
-                print(f"YOUTUBE API ERROR ({data['error'].get('status')}): {data['error'].get('message')}")
-                return None
-            if not data.get("items"):
-                print(f"YOUTUBE API: No items found for handle {handle}")
-                return None
+            url = f"https://www.googleapis.com/youtube/v3/channels?part=statistics,snippet,contentDetails&{query_param}&key={settings.youtube_api_key}"
+            async with httpx.AsyncClient() as client:
+                resp = await client.get(url)
+                data = resp.json()
+                if "error" in data:
+                    print(f"YOUTUBE API ERROR ({data['error'].get('status')}): {data['error'].get('message')}")
+                    return None
+                if not data.get("items"):
+                    print(f"YOUTUBE API: No items found for handle {handle}")
+                    return None
+                    
+                item = data["items"][0]
+                stats = item.get("statistics", {})
+                content_details = item.get("contentDetails", {})
+                uploads_id = content_details.get("relatedPlaylists", {}).get("uploads")
                 
-            item = data["items"][0]
-            stats = item.get("statistics", {})
-            return {
-                "channel_id": item["id"],
-                "handle": f"@{handle}",
-                "subscriber_count": int(stats.get("subscriberCount", 0)),
-                "view_count": int(stats.get("viewCount", 0)),
-                "video_count": int(stats.get("videoCount", 0)),
-                "recent_videos": []
-            }
+                return {
+                    "channel_id": item["id"],
+                    "handle": f"@{handle}",
+                    "subscriber_count": int(stats.get("subscriberCount", 0)),
+                    "view_count": int(stats.get("viewCount", 0)),
+                    "video_count": int(stats.get("videoCount", 0)),
+                    "uploads_playlist_id": uploads_id,
+                    "recent_videos": []
+                }
     except Exception as e:
         print(f"YouTube Error: {e}")
         return None
+
+async def fetch_recent_video_stats(playlist_id: str, count: int = 50) -> list[dict]:
+    """Fetches the last N videos from an uploads playlist including their publish time and performance stats."""
+    if not settings.youtube_api_key or not playlist_id:
+        return []
+        
+    try:
+        # Step 1: Get latest video IDs and publish times from playlist
+        url = f"https://www.googleapis.com/youtube/v3/playlistItems?part=snippet,contentDetails&playlistId={playlist_id}&maxResults={count}&key={settings.youtube_api_key}"
+        async with httpx.AsyncClient() as client:
+            resp = await client.get(url)
+            items = resp.json().get("items", [])
+            
+            if not items: return []
+            
+            video_data = []
+            video_ids = []
+            
+            for item in items:
+                vid_id = item["contentDetails"]["videoId"]
+                video_ids.append(vid_id)
+                video_data.append({
+                    "id": vid_id,
+                    "published_at": item["snippet"]["publishedAt"]
+                })
+                
+            # Step 2: Get statistics for these videos
+            stats_url = f"https://www.googleapis.com/youtube/v3/videos?part=statistics&id={','.join(video_ids)}&key={settings.youtube_api_key}"
+            stats_resp = await client.get(stats_url)
+            stats_items = stats_resp.json().get("items", [])
+            
+            stats_map = {i["id"]: i["statistics"] for i in stats_items}
+            
+            for v in video_data:
+                s = stats_map.get(v["id"], {})
+                v["views"] = int(s.get("viewCount", 0))
+                v["likes"] = int(s.get("likeCount", 0))
+                
+            return video_data
+    except Exception as e:
+        print(f"YouTube History Error: {e}")
+        return []
 
 async def fetch_video_comments(video_url: str) -> list[str]:
     if not settings.youtube_api_key:

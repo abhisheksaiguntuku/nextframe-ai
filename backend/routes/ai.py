@@ -67,11 +67,53 @@ async def ai_trends(req: NicheRequest, current_user: dict = Depends(get_current_
     ctx = await get_channel_context(str(current_user["_id"]))
     return await get_trending_ideas(req.niche, ctx)
 
+async def get_timing_context(user_id: str) -> str:
+    from services.youtube import fetch_recent_video_stats
+    from datetime import datetime
+    
+    channel = await channels_collection.find_one({"user_id": user_id})
+    if not channel or not channel.get("uploads_playlist_id"):
+        return "No historical channel data available."
+        
+    videos = await fetch_recent_video_stats(channel["uploads_playlist_id"], count=50)
+    if not videos:
+        return "No recent video performance data found."
+        
+    # Analyze views per day/hour
+    stats = {} # (day, hour) -> [views]
+    for v in videos:
+        dt = datetime.fromisoformat(v["published_at"].replace("Z", "+00:00"))
+        key = (dt.strftime("%A"), dt.hour)
+        if key not in stats: stats[key] = []
+        stats[key].append(v["views"])
+        
+    # Calculate averages and find top windows
+    averages = []
+    for (day, hour), viewsList in stats.items():
+        avg = sum(viewsList) / len(viewsList)
+        averages.append({"day": day, "hour": hour, "avg": avg})
+        
+    # Sort and take top 3
+    top_3 = sorted(averages, key=lambda x: x["avg"], reverse=True)[:3]
+    
+    context = "ACTUAL CHANNEL HISTORY (Use this for primary decision making):\n"
+    for idx, win in enumerate(top_3):
+        # Convert 24h to 12h for AI readability
+        h12 = win["hour"] % 12 or 12
+        ampm = "AM" if win["hour"] < 12 else "PM"
+        context += f"Success Window {idx+1}: {win['day']} around {h12}:00 {ampm} (Average Views: {int(win['avg'])})\n"
+        
+    return context
+
 @router.post("/best-time")
 async def ai_best_time(req: NicheRequest, current_user: dict = Depends(get_current_user)):
     from services.openai_service import get_best_time
-    ctx = await get_channel_context(str(current_user["_id"]))
-    return await get_best_time(req.niche, ctx)
+    uid = str(current_user["_id"])
+    ctx = await get_channel_context(uid)
+    timing_ctx = await get_timing_context(uid)
+    
+    combined_ctx = f"{ctx}\n\n{timing_ctx}" if ctx else timing_ctx
+    return await get_best_time(req.niche, combined_ctx)
 
 class TopicRequest(BaseModel):
     topic: str

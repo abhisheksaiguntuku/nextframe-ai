@@ -72,10 +72,24 @@ async def get_trending_ideas(niche: str, channel_context: str = None) -> dict:
     return await _call_openai(prompt, mock, keys)
 
 async def get_best_time(niche: str, channel_context: str = None) -> dict:
-    keys = {"best_day": "string", "best_time": "string", "confidence": "string"}
-    prompt = f"Determine optimal day and time to post for: '{niche}'."
-    if channel_context: prompt += f" Optimize best historical uploading times considering this channel: {channel_context}"
-    mock = {"best_day": "Friday", "best_time": "3:00 PM EST", "confidence": "92%"}
+    keys = {
+        "best_day": "string", 
+        "best_time": "string", 
+        "confidence": "string",
+        "top_windows": ["string (Day at Time)"],
+        "reasoning": "string"
+    }
+    prompt = f"Find the absolute best Day and Time to post for: '{niche}'."
+    if channel_context:
+        prompt += f"\nCRITICAL: Use this historical channel data to inform your decision. If the history shows specific peak days/hours, prioritize them: {channel_context}"
+    
+    mock = {
+        "best_day": "Friday", 
+        "best_time": "3:00 PM EST", 
+        "confidence": "92%",
+        "top_windows": ["Friday at 3:00 PM", "Saturday at 10:00 AM", "Wednesday at 6:00 PM"],
+        "reasoning": "[MOCKED] Based on your historical data, your audience engagement peaks significantly on Friday afternoons, likely because of your high student-creator demographics."
+    }
     return await _call_openai(prompt, mock, keys)
 
 async def get_audience_persona(niche: str, channel_context: str = None) -> dict:
