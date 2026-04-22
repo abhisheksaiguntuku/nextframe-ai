@@ -189,18 +189,19 @@ async def get_30_day_calendar(niche: str, channel_context: str = None, history_c
             {"day": "int", "title": "string", "format": "Short or Long", "strategy": "string", "brief": "string"}
         ]
     }
-    prompt = f"Generate a unique 30-day YouTube content calendar for a channel in the '{niche}' category."
+    prompt = f"Generate a unique 30-day YouTube content calendar for a channel precisely focused on '{niche}'."
     if channel_context:
-        prompt += f"\nCHANNEL BRANDING: {channel_context}."
+        prompt += f"\nCHANNEL BRANDING (Strictly follow this creator's vibe): {channel_context}."
     if history_context:
         prompt += f"\nHISTORY LOCK (Do not repeat these topics): {history_context}."
     
     prompt += (
         "\nCRITICAL INSTRUCTIONS:"
-        "\n1. Mix both Shorts (for subs) and Long-form (for revenue)."
-        "\n2. Assign a unique 'monthly_angle' based on the channel handle/context."
-        "\n3. Ensure EVERY title is highly clickable and brand-aligned."
-        "\n4. Generate EXACTLY 30 entries."
+        "\n1. STRICT TOPIC ADHERENCE: You must ONLY talk about the exact topic provided. DO NOT pivot to neighboring cities, similar categories, or 'more popular' alternatives. If the topic is Vizianagaram, do NOT provide content for Vizag/Visakhapatnam."
+        "\n2. Mix both Shorts (for subs) and Long-form (for revenue)."
+        "\n3. Assign a unique 'monthly_angle' based on the channel handle/context."
+        "\n4. Ensure EVERY title is highly clickable, localized to the exact topic, and brand-aligned."
+        "\n5. Generate EXACTLY 30 entries."
     )
     
     mock = {
