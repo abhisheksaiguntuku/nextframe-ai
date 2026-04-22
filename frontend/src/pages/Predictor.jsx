@@ -34,7 +34,7 @@ export default function Predictor() {
                         <MonitorPlay size={40} className="text-purple-500" />
                     </div>
                     <h2 className="text-3xl font-bold mb-4">Connect Your Channel</h2>
-                    <p className="text-gray-400 mb-8 max-w-md mx-auto">To predict video success based on your audience and niche, you must first link your YouTube handle.</p>
+                    <p className="text-gray-400 mb-8 max-w-md mx-auto">To predict video success based on your audience and channel category, you must first link your YouTube handle.</p>
                     <Link 
                         to="/dashboard"
                         className="inline-block bg-gradient-to-r from-purple-600 to-indigo-500 text-white font-bold py-3 px-12 rounded-xl hover:shadow-lg hover:shadow-purple-500/25 transition-all transform active:scale-[0.98]"
@@ -54,7 +54,7 @@ export default function Predictor() {
                         <div className="p-2 bg-purple-500/10 rounded-xl text-purple-500">
                             <TrendingUp size={28} />
                         </div>
-                        Success Predictor
+                        Success Chance
                     </h2>
                     <p className="text-gray-400 font-medium">Evaluate the virality potential of your next video concepts.</p>
                 </div>
@@ -62,7 +62,7 @@ export default function Predictor() {
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
                     <div className="bg-gray-900 border border-gray-800 rounded-3xl p-8 shadow-2xl relative overflow-hidden">
                         <div className="absolute bottom-0 right-0 w-32 h-32 bg-purple-500/10 rounded-full blur-[50px] pointer-events-none"></div>
-                        <h3 className="text-xl font-bold text-white mb-6">Video Metadata</h3>
+                        <h3 className="text-xl font-bold text-white mb-6">Video Details</h3>
                         <form onSubmit={handlePredict} className="space-y-6 relative z-10">
                             <div>
                                 <label className="block text-sm font-semibold text-gray-400 mb-2">Planned Title</label>
@@ -93,7 +93,7 @@ export default function Predictor() {
                                 </select>
                             </div>
                             <button type="submit" disabled={loading} className="w-full bg-gradient-to-r from-purple-600 to-indigo-600 text-white font-bold py-4 rounded-xl hover:shadow-lg hover:shadow-purple-500/25 transition-all transform active:scale-[0.98] disabled:opacity-50">
-                                {loading ? 'Scanning Neural Network...' : 'Analyze Potential'}
+                                {loading ? 'Analyzing with AI...' : 'Analyze Potential'}
                             </button>
                         </form>
                     </div>
@@ -102,7 +102,7 @@ export default function Predictor() {
                         {!result && !loading && (
                             <div className="h-full min-h-[400px] border border-gray-800/40 bg-gray-900/40 backdrop-blur-sm rounded-3xl flex flex-col items-center justify-center text-gray-500 p-8 text-center border-dashed">
                                 <Activity size={64} className="mb-6 opacity-20" />
-                                <h3 className="text-xl font-bold text-gray-400 mb-2">Waiting for Metadata</h3>
+                                <h3 className="text-xl font-bold text-gray-400 mb-2">Waiting for Details</h3>
                                 <p className="max-w-xs text-sm">Provide details to generate an engagement prediction score.</p>
                             </div>
                         )}
@@ -110,7 +110,7 @@ export default function Predictor() {
                         {loading && (
                             <div className="h-full min-h-[400px] bg-gray-900 rounded-3xl flex flex-col items-center justify-center border border-gray-800 shadow-2xl">
                                 <Activity className="animate-bounce text-purple-500 mb-4" size={48} />
-                                <span className="text-purple-400 font-bold text-lg">Predicting Virality...</span>
+                                <span className="text-purple-400 font-bold text-lg">Calculating Chance...</span>
                             </div>
                         )}
 

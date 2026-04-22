@@ -7,7 +7,7 @@ import { Link } from 'react-router-dom';
 
 export default function TrendingIdeas() {
     const { hasChannel } = useContext(AuthContext);
-    const [niche, setNiche] = useState('');
+    const [topic, setTopic] = useState('');
     const [loading, setLoading] = useState(false);
     const [result, setResult] = useState(null);
 
@@ -15,7 +15,7 @@ export default function TrendingIdeas() {
         e.preventDefault();
         setLoading(true);
         try {
-            const res = await api.post('/ai/trends', { niche });
+            const res = await api.post('/ai/trends', { niche: topic });
             setResult(res.data);
         } catch (err) {
             alert(err.response?.data?.detail || 'Failed to fetch trending ideas');
@@ -44,32 +44,11 @@ export default function TrendingIdeas() {
         );
     }
 
-    if (!hasChannel) {
-        return (
-            <Layout>
-                <div className="max-w-2xl mx-auto mt-20 text-center border border-gray-800 bg-gray-900 p-12 rounded-3xl shadow-2xl relative overflow-hidden">
-                    <div className="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-orange-500 to-amber-500"></div>
-                    <div className="w-20 h-20 bg-gray-950 rounded-2xl flex items-center justify-center mx-auto mb-6 border border-gray-800 shadow-xl">
-                        <MonitorPlay size={40} className="text-orange-500" />
-                    </div>
-                    <h2 className="text-3xl font-bold mb-4">Connect Your Channel</h2>
-                    <p className="text-gray-400 mb-8 max-w-md mx-auto">To discover trending topics and viral ideas personalized for your brand, you must first connect your YouTube handle.</p>
-                    <Link 
-                        to="/dashboard"
-                        className="inline-block bg-gradient-to-r from-orange-600 to-amber-500 text-white font-bold py-3 px-12 rounded-xl hover:shadow-lg hover:shadow-orange-500/25 transition-all transform active:scale-[0.98]"
-                    >
-                        Go to Dashboard to Connect
-                    </Link>
-                </div>
-            </Layout>
-        );
-    }
-
     return (
         <Layout>
             <div className="mb-10">
-                <h2 className="text-3xl font-bold mb-2">Trending Ideas Engine</h2>
-                <p className="text-gray-400 font-medium">Discover what's going viral right now in your specific niche.</p>
+                <h2 className="text-3xl font-bold mb-2">Viral Ideas Finder</h2>
+                <p className="text-gray-400 font-medium">Discover what's going viral right now in your specific category.</p>
             </div>
 
             <div className="bg-gray-900 border border-gray-800 rounded-2xl p-8 shadow-xl mb-8">
@@ -77,7 +56,7 @@ export default function TrendingIdeas() {
                     <input 
                         type="text" placeholder="Channel Category (e.g., Tech Reviews, Fitness, Comedy)"
                         className="flex-1 bg-gray-950 border border-gray-700 rounded-xl px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-orange-500 transition-all font-medium"
-                        value={niche} onChange={e => setNiche(e.target.value)} required 
+                        value={topic} onChange={e => setTopic(e.target.value)} required 
                     />
                     <button type="submit" disabled={loading} className="bg-gradient-to-r from-orange-600 to-amber-500 text-white font-bold py-3 px-8 rounded-xl hover:shadow-lg hover:shadow-orange-500/25 transition-all transform active:scale-[0.98] disabled:opacity-50 flex items-center justify-center gap-2 whitespace-nowrap">
                         <Flame size={18} /> {loading ? 'Scanning Trends...' : 'Find Trends'}

@@ -57,8 +57,8 @@ export default function ContentCalendar() {
                     <div className="w-20 h-20 bg-gray-950 rounded-2xl flex items-center justify-center mx-auto mb-6 border border-gray-800 shadow-xl">
                         <MonitorPlay size={40} className="text-emerald-500" />
                     </div>
-                    <h2 className="text-3xl font-bold mb-4">Content Calendar Locked</h2>
-                    <p className="text-gray-400 mb-8 max-w-md mx-auto">To generate a 30-day strategy that doesn't repeat your past videos, we need to scan your channel history first.</p>
+                    <h2 className="text-3xl font-bold mb-4">Channel Category Required</h2>
+                    <p className="text-gray-400 mb-8 max-w-md mx-auto">To generate a 30-day strategy that doesn't repeat your past videos, we need to know your channel category first.</p>
                     <Link 
                         to="/dashboard"
                         className="inline-block bg-gradient-to-r from-emerald-600 to-teal-500 text-white font-bold py-3 px-12 rounded-xl hover:shadow-lg hover:shadow-emerald-500/25 transition-all transform active:scale-[0.98]"
@@ -98,13 +98,13 @@ export default function ContentCalendar() {
                         <div className="absolute -top-24 -left-24 w-64 h-64 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none"></div>
                         <div className="max-w-md mx-auto">
                             <h3 className="text-2xl font-bold mb-4">Set Your Monthly Focus</h3>
-                            <p className="text-gray-400 mb-8">What is the core theme for your next 30 days of content?</p>
+                            <p className="text-gray-400 mb-8">What is the core topic for your next 30 days of content?</p>
                             <form onSubmit={generateCalendar} className="space-y-4">
                                 <input 
                                     type="text" 
                                     className="w-full bg-gray-950 border border-gray-700 rounded-2xl px-6 py-4 text-white focus:outline-none focus:ring-2 focus:ring-emerald-500/50 transition-all text-center font-bold text-lg"
                                     placeholder="e.g. AI Coding, Travel Vlogs, Fitness"
-                                    value={niche} onChange={e => setNiche(e.target.value)} required 
+                                    value={topic} onChange={e => setTopic(e.target.value)} required 
                                 />
                                 <button 
                                     type="submit" 

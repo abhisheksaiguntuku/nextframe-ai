@@ -53,7 +53,7 @@ export default function SeoStudio() {
                         <div className="p-2 bg-orange-500/10 rounded-xl text-orange-500">
                             <Sparkles size={28} />
                         </div>
-                        SEO Studio
+                        SEO Optimizer
                     </h2>
                     <p className="text-gray-400 font-medium">Optimize your video title and discover the best tags to rank higher in YouTube search.</p>
                 </div>
@@ -72,7 +72,7 @@ export default function SeoStudio() {
                                 />
                             </div>
                             <div>
-                                <label className="block text-sm font-semibold text-gray-400 mb-2">Main Topic / Niche</label>
+                                <label className="block text-sm font-semibold text-gray-400 mb-2">Channel Category / Topic</label>
                                 <input 
                                     type="text" 
                                     className="w-full bg-gray-950 border border-gray-700 rounded-xl px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-orange-500/50 transition-all shadow-inner"
@@ -98,8 +98,7 @@ export default function SeoStudio() {
                         {loading && (
                             <div className="h-full min-h-[400px] bg-gray-900 rounded-3xl flex flex-col items-center justify-center border border-gray-800 shadow-2xl">
                                 <Sparkles className="animate-pulse text-orange-500 mb-4" size={48} />
-                                <span className="text-orange-400 font-bold text-lg">Harnessing AI Models...</span>
-                                <p className="text-gray-500 text-sm mt-2">Computing semantic reach and tags</p>
+                                <span className="text-orange-400 font-bold text-lg">AI is finding the best tags...</span>
                             </div>
                         )}
 

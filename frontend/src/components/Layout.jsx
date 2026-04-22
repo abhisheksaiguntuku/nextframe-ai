@@ -10,15 +10,15 @@ export default function Layout({ children }) {
 
     const navItems = [
         { name: 'Dashboard', path: '/dashboard', icon: <LayoutDashboard size={20} /> },
-        { name: 'Shorts Repurposer', path: '/shorts', icon: <Scissors size={20} /> },
-        { name: 'Content Calendar', path: '/calendar', icon: <Calendar size={20} /> },
-        { name: 'Predictor', path: '/predict', icon: <TrendingUp size={20} /> },
-        { name: 'SEO Studio', path: '/seo-studio', icon: <Search size={20} /> },
-        { name: 'Sentiment', path: '/sentiment', icon: <MessageSquare size={20} /> },
-        { name: 'Competitors', path: '/competitor', icon: <Target size={20} /> },
-        { name: 'Trending', path: '/trends', icon: <Flame size={20} /> },
-        { name: 'Best Time', path: '/best-time', icon: <Clock size={20} /> },
-        { name: 'Advanced Lab', path: '/advanced-studio', icon: <Wand2 size={20} /> }
+        { name: 'Viral Shorts', path: '/shorts', icon: <Scissors size={20} /> },
+        { name: 'Auto-Pilot Calendar', path: '/calendar', icon: <Calendar size={20} /> },
+        { name: 'Success Chance', path: '/predict', icon: <TrendingUp size={20} /> },
+        { name: 'SEO Optimizer', path: '/seo-studio', icon: <Search size={20} /> },
+        { name: 'Viewer Feedback', path: '/sentiment', icon: <MessageSquare size={20} /> },
+        { name: 'Channel Comparison', path: '/competitor', icon: <Target size={20} /> },
+        { name: 'Trending Now', path: '/trends', icon: <Flame size={20} /> },
+        { name: 'Best Post Time', path: '/best-time', icon: <Clock size={20} /> },
+        { name: 'AI Content Lab', path: '/advanced-studio', icon: <Wand2 size={20} /> }
     ];
 
     const toggleSidebar = () => setIsSidebarOpen(!isSidebarOpen);

@@ -116,8 +116,8 @@ export default function AdvancedStudio() {
     return (
         <Layout>
             <div className="mb-10">
-                <h2 className="text-3xl font-bold mb-2 text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600">Advanced AI Lab</h2>
-                <p className="text-gray-400 font-medium">Your all-in-one suite for rapid content ideation and production.</p>
+                <h2 className="text-3xl font-bold mb-2 text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600">AI Content Lab</h2>
+                <p className="text-gray-400 font-medium">Your all-in-one tools for rapid content ideas and video planning.</p>
             </div>
 
             <div className="flex overflow-x-auto gap-2 mb-8 bg-gray-900 border border-gray-800 p-2 rounded-2xl">
