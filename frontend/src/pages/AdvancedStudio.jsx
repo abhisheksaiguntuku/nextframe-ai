@@ -2,7 +2,7 @@ import { useState, useContext } from 'react';
 import Layout from '../components/Layout';
 import api from '../api/axios';
 import { AuthContext } from '../context/AuthContext';
-import { Users, FileText, Wand2, Type, Image as ImageIcon, Zap, FileBarChart, MonitorPlay } from 'lucide-react';
+import { Users, FileText, Wand2, Type, Image as ImageIcon, Zap, FileBarChart, MonitorPlay, RefreshCw, AlertCircle } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 export default function AdvancedStudio() {
@@ -52,13 +52,20 @@ export default function AdvancedStudio() {
 
     const generateVisual = async (topic, styleVal) => {
         setImageLoading(true);
+        setImagePreview(null); // Clear old one immediately
         try {
-            const res = await api.post('/ai/generate-image-preview', { topic, style: styleVal });
+            // Add a timestamp to bypass any caching
+            const res = await api.post('/ai/generate-image-preview', { 
+                topic, 
+                style: styleVal,
+                _t: Date.now() 
+            });
             setImagePreview(res.data.image_url);
         } catch (e) {
             console.error("Image gen failed");
         }
-        setImageLoading(false);
+        // Note: we don't set imageLoading to false here, 
+        // we wait for the <img> tag's onLoad event.
     };
 
     // Safe renderer for any value - handles strings, arrays, objects without crashing
@@ -187,31 +194,56 @@ export default function AdvancedStudio() {
                                 <h4 className="text-purple-400 font-bold uppercase tracking-wider text-sm mb-6">
                                     Visual Preview ({style})
                                 </h4>
-                                {imageLoading ? (
-                                    <div className="aspect-video bg-gray-950 rounded-2xl border border-gray-800 flex items-center justify-center animate-pulse">
-                                        <div className="text-gray-500 font-bold">Rendering Visual Concept...</div>
-                                    </div>
-                                ) : imagePreview ? (
-                                    <div className="group relative">
-                                        <img 
-                                            src={imagePreview} 
-                                            alt="Thumbnail Preview" 
-                                            className="w-full aspect-video object-cover rounded-2xl border border-gray-800 shadow-2xl transition-transform group-hover:scale-[1.01]" 
-                                        />
-                                        <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity rounded-2xl flex items-center justify-center">
-                                            <p className="text-white font-bold bg-black/60 px-4 py-2 rounded-lg backdrop-blur-md border border-white/10">AI Generated Concept</p>
+                                {imageLoading && (
+                                    <div className="aspect-video bg-gray-950 rounded-2xl border border-gray-800 flex flex-col items-center justify-center">
+                                        <div className="relative w-12 h-12 mb-4">
+                                            <div className="absolute inset-0 border-4 border-purple-500/20 rounded-full"></div>
+                                            <div className="absolute inset-0 border-4 border-purple-500 border-t-transparent rounded-full animate-spin"></div>
                                         </div>
+                                        <div className="text-gray-500 font-bold animate-pulse">AI is painting your thumbnail...</div>
                                     </div>
-                                ) : (
-                                    <button 
-                                        onClick={() => generateVisual(inputVal, style)}
-                                        className="w-full py-4 bg-gray-800 hover:bg-gray-700 rounded-xl font-bold transition-all text-gray-300 border border-gray-700"
-                                    >
-                                        Refresh Visual Preview
-                                    </button>
                                 )}
+                                
+                                <div className={`group relative ${imageLoading ? 'hidden' : 'block'}`}>
+                                    {imagePreview && (
+                                        <>
+                                            <img 
+                                                src={imagePreview} 
+                                                alt="Thumbnail Preview" 
+                                                onLoad={() => setImageLoading(false)}
+                                                onError={() => {
+                                                    setImageLoading(false);
+                                                    setImagePreview(null);
+                                                }}
+                                                className="w-full aspect-video object-cover rounded-2xl border border-gray-800 shadow-2xl transition-transform group-hover:scale-[1.01]" 
+                                            />
+                                            <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity rounded-2xl flex items-center justify-center gap-4">
+                                                <button 
+                                                    onClick={() => generateVisual(inputVal, style)}
+                                                    className="bg-white/20 hover:bg-white/30 backdrop-blur-md text-white px-4 py-2 rounded-lg border border-white/20 font-bold flex items-center gap-2 transition-all"
+                                                >
+                                                    <RefreshCw size={16} /> Regenerate
+                                                </button>
+                                            </div>
+                                        </>
+                                    )}
+                                    
+                                    {!imagePreview && !imageLoading && (
+                                        <div className="aspect-video bg-gray-950 rounded-2xl border border-gray-800 flex flex-col items-center justify-center p-8 text-center">
+                                            <AlertCircle className="text-yellow-500 mb-4" size={40} />
+                                            <p className="text-gray-400 font-medium mb-6">Visual preview failed to load or hasn't started.</p>
+                                            <button 
+                                                onClick={() => generateVisual(inputVal, style)}
+                                                className="bg-purple-600 hover:bg-purple-500 text-white font-bold py-3 px-8 rounded-xl transition-all"
+                                            >
+                                                Try Generating Again
+                                            </button>
+                                        </div>
+                                    )}
+                                </div>
+                                
                                 <p className="text-gray-500 text-xs mt-4 italic">
-                                    Tip: If you don't like this image, you can copy the "Image Prompt" text above and use it in Midjourney or Canva.
+                                    Tip: If you don't like this image, click "Regenerate" to get a brand new concept instantly.
                                 </p>
                             </div>
                         )}
