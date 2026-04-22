@@ -2,7 +2,7 @@ import { useState, useContext } from 'react';
 import Layout from '../components/Layout';
 import api from '../api/axios';
 import { AuthContext } from '../context/AuthContext';
-import { Scissors, Youtube, Wand2, Copy, Check, ExternalLink, MonitorPlay } from 'lucide-react';
+import { Scissors, PlayCircle, Wand2, Copy, Check, ExternalLink, MonitorPlay } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 export default function ShortsRepurposer() {
@@ -40,7 +40,7 @@ export default function ShortsRepurposer() {
                         <MonitorPlay size={40} className="text-red-500" />
                     </div>
                     <h2 className="text-3xl font-bold mb-4">Connect Your Channel First</h2>
-                    <p className="text-gray-400 mb-8 max-w-md mx-auto">The Shorts Repurposer needs your channel brand context to create viral clips that match your voice.</p>
+                    <p className="text-gray-400 mb-8 max-w-md mx-auto">The Viral Shorts tool needs your channel brand context to create clips that match your voice.</p>
                     <Link 
                         to="/dashboard"
                         className="inline-block bg-gradient-to-r from-red-600 to-orange-500 text-white font-bold py-3 px-12 rounded-xl hover:shadow-lg hover:shadow-red-500/25 transition-all transform active:scale-[0.98]"
@@ -60,7 +60,7 @@ export default function ShortsRepurposer() {
                         <div className="p-2 bg-red-500/10 rounded-xl text-red-500">
                             <Scissors size={28} />
                         </div>
-                        Shorts Repurposer
+                        Viral Shorts Maker
                     </h2>
                     <p className="text-gray-400 font-medium">Extract high-impact, viral Short-form ideas from any long YouTube video.</p>
                 </div>
@@ -68,7 +68,7 @@ export default function ShortsRepurposer() {
                 <div className="bg-gray-900 border border-gray-800 rounded-3xl p-8 shadow-2xl mb-12 relative overflow-hidden">
                     <div className="absolute top-0 right-0 w-64 h-64 bg-red-500/5 rounded-full blur-[80px] pointer-events-none"></div>
                     <h3 className="text-xl font-bold text-white mb-6 flex items-center gap-2">
-                        <Youtube className="text-red-500" /> Analyze Long-Form Video
+                        <PlayCircle className="text-red-500" /> Analyze Long-Form Video
                     </h3>
                     <form onSubmit={handleRepurpose} className="flex flex-col md:flex-row gap-4">
                         <input 
