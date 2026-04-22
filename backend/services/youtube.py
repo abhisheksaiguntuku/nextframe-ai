@@ -38,10 +38,14 @@ async def fetch_channel_data(handle: str) -> dict:
             resp = await client.get(url)
             data = resp.json()
             if "error" in data:
-                print(f"YOUTUBE API ERROR ({data['error'].get('status')}): {data['error'].get('message')}")
+                error_code = data['error'].get('code', 'unknown')
+                error_msg = data['error'].get('message', 'unknown')
+                error_status = data['error'].get('status', 'unknown')
+                print(f"YOUTUBE API ERROR: Code={error_code}, Status={error_status}, Message={error_msg}")
+                print(f"YOUTUBE API FULL ERROR: {data}")
                 return None
             if not data.get("items"):
-                print(f"YOUTUBE API: No items found for handle/id: {handle}")
+                print(f"YOUTUBE API: No items found for handle/id: '{handle}'. Full response: {data}")
                 return None
                 
             item = data["items"][0]
@@ -61,7 +65,7 @@ async def fetch_channel_data(handle: str) -> dict:
                 "recent_videos": []
             }
     except Exception as e:
-        print(f"YouTube Error: {e}")
+        print(f"YouTube fetch_channel_data Exception: {type(e).__name__}: {e}")
         return None
 
 async def fetch_recent_video_stats(playlist_id: str, count: int = 50) -> list[dict]:
