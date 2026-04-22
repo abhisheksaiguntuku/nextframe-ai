@@ -21,7 +21,8 @@ export default function Dashboard() {
             const res = await api.get('/channel/dashboard');
             setData(res.data);
         } catch (err) {
-            alert('Failed to connect channel. Ensure handle is correct.');
+            const msg = err.response?.data?.detail || 'Failed to connect. Check your channel handle and try again.';
+            alert(msg);
         }
         setLoading(false);
     };
