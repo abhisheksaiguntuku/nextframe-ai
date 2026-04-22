@@ -7,7 +7,7 @@ import { Link } from 'react-router-dom';
 
 export default function ContentCalendar() {
     const { hasChannel, channelData } = useContext(AuthContext);
-    const [niche, setNiche] = useState('');
+    const [topic, setTopic] = useState('');
     const [loading, setLoading] = useState(false);
     const [calendar, setCalendar] = useState(null);
     const [monthlyAngle, setMonthlyAngle] = useState('');
@@ -18,7 +18,7 @@ export default function ContentCalendar() {
         setLoading(true);
         setCalendar(null);
         try {
-            const res = await api.post('/ai/calendar', { niche });
+            const res = await api.post('/ai/calendar', { niche: topic });
             setCalendar(res.data.calendar);
             setMonthlyAngle(res.data.monthly_angle);
         } catch (err) {
@@ -32,7 +32,7 @@ export default function ContentCalendar() {
         try {
             // We use a specialized "re-roll" prompt logic by calling a similar endpoint
             // or just re-generating a single day via the strategy endpoint
-            const res = await api.post('/ai/strategy', { topic: `${niche} day ${idx + 1}` });
+            const res = await api.post('/ai/strategy', { topic: `${topic} day ${idx + 1}` });
             const newDay = {
                 day: idx + 1,
                 title: res.data.pillar_videos[0] || 'Viral Concept Update',

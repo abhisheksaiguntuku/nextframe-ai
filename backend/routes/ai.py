@@ -172,10 +172,12 @@ async def ai_image_preview(req: ThumbnailRequest, current_user: dict = Depends(g
     # Simple proxy to external generator or prompt logic
     # For now, we return the URL for Pollinations directly
     import random
+    from urllib.parse import quote
     seed = random.randint(1, 999999)
     # Using the topic and style to build a clean prompt for the direct API
-    clean_prompt = f"{req.topic} {req.style} style high resolution youtube thumbnail concept"
-    url = f"https://image.pollinations.ai/prompt/{clean_prompt.replace(' ', '%20')}?seed={seed}&width=1024&height=1024&nologo=true"
+    clean_prompt = f"{req.topic} {req.style} style high resolution youtube thumbnail concept cinematic lighting"
+    encoded_prompt = quote(clean_prompt)
+    url = f"https://image.pollinations.ai/prompt/{encoded_prompt}?seed={seed}&width=1280&height=720&nologo=true"
     return {"image_url": url}
 
 @router.post("/recommendations")
