@@ -15,39 +15,51 @@ async def fetch_channel_data(handle: str) -> dict:
         }
         
     try:
+        # Strip full YouTube URLs to just the handle or ID
+        # e.g. https://www.youtube.com/@MrBeast → MrBeast
+        # e.g. https://www.youtube.com/channel/UCX6OQ3DkcsbYNE6H8uQQuVA → UCX6OQ3DkcsbYNE6H8uQQuVA
+        if "youtube.com/channel/" in handle:
+            handle = handle.split("youtube.com/channel/")[-1].split("/")[0].strip()
+        elif "youtube.com/@" in handle:
+            handle = handle.split("youtube.com/@")[-1].split("/")[0].strip()
+        elif "youtube.com/" in handle:
+            handle = handle.split("youtube.com/")[-1].split("/")[0].strip()
+
         query_param = ""
-        if handle.startswith("UC") and len(handle) == 24:
+        if handle.startswith("UC") and len(handle) >= 20:
             query_param = f"id={handle}"
         else:
             if handle.startswith('@'):
                 handle = handle[1:]
             query_param = f"forHandle={handle}"
             
-            url = f"https://www.googleapis.com/youtube/v3/channels?part=statistics,snippet,contentDetails&{query_param}&key={settings.youtube_api_key}"
-            async with httpx.AsyncClient() as client:
-                resp = await client.get(url)
-                data = resp.json()
-                if "error" in data:
-                    print(f"YOUTUBE API ERROR ({data['error'].get('status')}): {data['error'].get('message')}")
-                    return None
-                if not data.get("items"):
-                    print(f"YOUTUBE API: No items found for handle {handle}")
-                    return None
-                    
-                item = data["items"][0]
-                stats = item.get("statistics", {})
-                content_details = item.get("contentDetails", {})
-                uploads_id = content_details.get("relatedPlaylists", {}).get("uploads")
+        url = f"https://www.googleapis.com/youtube/v3/channels?part=statistics,snippet,contentDetails&{query_param}&key={settings.youtube_api_key}"
+        async with httpx.AsyncClient() as client:
+            resp = await client.get(url)
+            data = resp.json()
+            if "error" in data:
+                print(f"YOUTUBE API ERROR ({data['error'].get('status')}): {data['error'].get('message')}")
+                return None
+            if not data.get("items"):
+                print(f"YOUTUBE API: No items found for handle/id: {handle}")
+                return None
                 
-                return {
-                    "channel_id": item["id"],
-                    "handle": f"@{handle}",
-                    "subscriber_count": int(stats.get("subscriberCount", 0)),
-                    "view_count": int(stats.get("viewCount", 0)),
-                    "video_count": int(stats.get("videoCount", 0)),
-                    "uploads_playlist_id": uploads_id,
-                    "recent_videos": []
-                }
+            item = data["items"][0]
+            stats = item.get("statistics", {})
+            content_details = item.get("contentDetails", {})
+            uploads_id = content_details.get("relatedPlaylists", {}).get("uploads")
+            snippet = item.get("snippet", {})
+            display_handle = snippet.get("customUrl", f"@{handle}")
+            
+            return {
+                "channel_id": item["id"],
+                "handle": display_handle,
+                "subscriber_count": int(stats.get("subscriberCount", 0)),
+                "view_count": int(stats.get("viewCount", 0)),
+                "video_count": int(stats.get("videoCount", 0)),
+                "uploads_playlist_id": uploads_id,
+                "recent_videos": []
+            }
     except Exception as e:
         print(f"YouTube Error: {e}")
         return None

@@ -37,17 +37,22 @@ export default function Dashboard() {
                         <MonitorPlay size={40} className="text-red-500" />
                     </div>
                     <h2 className="text-3xl font-bold mb-4">Connect Your Channel</h2>
-                    <p className="text-gray-400 mb-8 max-w-md mx-auto">Link your YouTube account to unlock AI-powered analytics, predictor engine, and SEO growth tools.</p>
-                    <form onSubmit={connectChannel} className="flex gap-3 justify-center max-w-md mx-auto">
-                        <input 
-                            type="text" 
-                            placeholder="Enter @handle"
-                            className="flex-1 bg-gray-950 border border-gray-700 rounded-xl px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-red-500 transition-all font-medium"
-                            value={handle} onChange={e => setHandle(e.target.value)} required 
-                        />
-                        <button type="submit" disabled={loading} className="bg-gradient-to-r from-red-600 to-orange-500 text-white font-bold py-3 px-8 rounded-xl hover:shadow-lg hover:shadow-red-500/25 transition-all transform active:scale-[0.98] disabled:opacity-50">
-                            {loading ? '...' : 'Connect'}
-                        </button>
+                    <p className="text-gray-400 mb-8 max-w-md mx-auto">Link your YouTube channel to unlock AI-powered analytics, growth tools, and your personalized content strategy.</p>
+                    <form onSubmit={connectChannel} className="space-y-3 max-w-md mx-auto">
+                        <div className="flex gap-3">
+                            <input 
+                                type="text" 
+                                placeholder="@handle, Channel ID, or YouTube URL"
+                                className="flex-1 bg-gray-950 border border-gray-700 rounded-xl px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-red-500 transition-all font-medium"
+                                value={handle} onChange={e => setHandle(e.target.value)} required 
+                            />
+                            <button type="submit" disabled={loading} className="bg-gradient-to-r from-red-600 to-orange-500 text-white font-bold py-3 px-8 rounded-xl hover:shadow-lg hover:shadow-red-500/25 transition-all transform active:scale-[0.98] disabled:opacity-50">
+                                {loading ? '...' : 'Connect'}
+                            </button>
+                        </div>
+                        <p className="text-xs text-gray-600 text-left font-medium">
+                            ✅ Accepted: <span className="text-gray-400">@MrBeast</span> · <span className="text-gray-400">UCX6OQ3Dkcs...</span> · <span className="text-gray-400">https://youtube.com/@MrBeast</span>
+                        </p>
                     </form>
                 </div>
             </Layout>
