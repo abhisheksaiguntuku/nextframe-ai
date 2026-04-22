@@ -1,7 +1,7 @@
 import { useContext, useState } from 'react';
 import { AuthContext } from '../context/AuthContext';
 import { Link, useLocation } from 'react-router-dom';
-import { LayoutDashboard, LogOut, TrendingUp, Search, MonitorPlay, MessageSquare, Target, Flame, Clock, Wand2, Menu, X } from 'lucide-react';
+import { LayoutDashboard, LogOut, TrendingUp, Search, MonitorPlay, MessageSquare, Target, Flame, Clock, Wand2, Menu, X, Scissors, Calendar } from 'lucide-react';
 
 export default function Layout({ children }) {
     const { logout, user } = useContext(AuthContext);
@@ -10,6 +10,8 @@ export default function Layout({ children }) {
 
     const navItems = [
         { name: 'Dashboard', path: '/dashboard', icon: <LayoutDashboard size={20} /> },
+        { name: 'Shorts Repurposer', path: '/shorts', icon: <Scissors size={20} /> },
+        { name: 'Content Calendar', path: '/calendar', icon: <Calendar size={20} /> },
         { name: 'Predictor', path: '/predict', icon: <TrendingUp size={20} /> },
         { name: 'SEO Studio', path: '/seo-studio', icon: <Search size={20} /> },
         { name: 'Sentiment', path: '/sentiment', icon: <MessageSquare size={20} /> },

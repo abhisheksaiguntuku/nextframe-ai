@@ -24,7 +24,7 @@ export default function CompetitorAnalysis() {
         <Layout>
             <div className="mb-10">
                 <h2 className="text-3xl font-bold mb-2">Competitor Analysis Engine</h2>
-                <p className="text-gray-400 font-medium">Find the content gaps and conquer your niche.</p>
+                <p className="text-gray-400 font-medium">Find content gaps and be the best in your category.</p>
             </div>
 
             <div className="bg-gray-900 border border-gray-800 rounded-2xl p-8 shadow-xl mb-8">

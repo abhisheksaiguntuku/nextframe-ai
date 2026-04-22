@@ -94,6 +94,29 @@ async def fetch_recent_video_stats(playlist_id: str, count: int = 50) -> list[di
         print(f"YouTube History Error: {e}")
         return []
 
+async def fetch_video_details(video_url: str) -> dict:
+    if not settings.youtube_api_key:
+        return {"title": "Mock Video Title", "description": "This is a mock description for testing repurposing logic."}
+        
+    match = re.search(r"(?:v=|\/)([0-9A-Za-z_-]{11}).*", video_url)
+    if not match: return None
+    video_id = match.group(1)
+    
+    url = f"https://www.googleapis.com/youtube/v3/videos?part=snippet&id={video_id}&key={settings.youtube_api_key}"
+    try:
+        async with httpx.AsyncClient() as client:
+            resp = await client.get(url)
+            data = resp.json()
+            if not data.get("items"): return None
+            snippet = data["items"][0]["snippet"]
+            return {
+                "video_id": video_id,
+                "title": snippet.get("title"),
+                "description": snippet.get("description")
+            }
+    except Exception:
+        return None
+
 async def fetch_video_comments(video_url: str) -> list[str]:
     if not settings.youtube_api_key:
         return ["Great video!", "Loved this", "Not bad, could be better", "Amazing content"]

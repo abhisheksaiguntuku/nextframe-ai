@@ -1,9 +1,12 @@
-import { useState } from 'react';
+import { useState, useContext } from 'react';
 import Layout from '../components/Layout';
 import api from '../api/axios';
-import { Search, Sparkles, CheckCircle2 } from 'lucide-react';
+import { AuthContext } from '../context/AuthContext';
+import { Search, Sparkles, CheckCircle2, MonitorPlay } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 export default function SeoStudio() {
+    const { hasChannel } = useContext(AuthContext);
     const [title, setTitle] = useState('');
     const [topic, setTopic] = useState('');
     const [result, setResult] = useState(null);
@@ -20,6 +23,27 @@ export default function SeoStudio() {
         }
         setLoading(false);
     };
+
+    if (!hasChannel) {
+        return (
+            <Layout>
+                <div className="max-w-2xl mx-auto mt-20 text-center border border-gray-800 bg-gray-900 p-12 rounded-3xl shadow-2xl relative overflow-hidden">
+                    <div className="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-orange-500 to-red-500"></div>
+                    <div className="w-20 h-20 bg-gray-950 rounded-2xl flex items-center justify-center mx-auto mb-6 border border-gray-800 shadow-xl">
+                        <MonitorPlay size={40} className="text-orange-500" />
+                    </div>
+                    <h2 className="text-3xl font-bold mb-4">Connect Your Channel</h2>
+                    <p className="text-gray-400 mb-8 max-w-md mx-auto">To perform data-driven SEO analysis tailored to your specific audience, you must first connect your YouTube handle.</p>
+                    <Link 
+                        to="/dashboard"
+                        className="inline-block bg-gradient-to-r from-orange-600 to-red-500 text-white font-bold py-3 px-12 rounded-xl hover:shadow-lg hover:shadow-orange-500/25 transition-all transform active:scale-[0.98]"
+                    >
+                        Go to Dashboard to Connect
+                    </Link>
+                </div>
+            </Layout>
+        );
+    }
 
     return (
         <Layout>

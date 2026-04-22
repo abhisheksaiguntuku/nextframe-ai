@@ -1,9 +1,12 @@
-import { useState } from 'react';
+import { useState, useContext } from 'react';
 import Layout from '../components/Layout';
 import api from '../api/axios';
-import { Clock, Calendar, CheckCircle, TrendingUp, Info } from 'lucide-react';
+import { AuthContext } from '../context/AuthContext';
+import { Clock, Calendar, CheckCircle, TrendingUp, Info, MonitorPlay } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 export default function BestTime() {
+    const { hasChannel } = useContext(AuthContext);
     const [niche, setNiche] = useState('');
     const [loading, setLoading] = useState(false);
     const [result, setResult] = useState(null);
@@ -20,6 +23,48 @@ export default function BestTime() {
         setLoading(false);
     };
 
+    if (!hasChannel) {
+        return (
+            <Layout>
+                <div className="max-w-2xl mx-auto mt-20 text-center border border-gray-800 bg-gray-900 p-12 rounded-3xl shadow-2xl relative overflow-hidden">
+                    <div className="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-blue-500 to-cyan-500"></div>
+                    <div className="w-20 h-20 bg-gray-950 rounded-2xl flex items-center justify-center mx-auto mb-6 border border-gray-800 shadow-xl">
+                        <MonitorPlay size={40} className="text-blue-500" />
+                    </div>
+                    <h2 className="text-3xl font-bold mb-4">Connect Your Channel</h2>
+                    <p className="text-gray-400 mb-8 max-w-md mx-auto">To predict the absolute best time to post based on your real audience data, you must first connect your YouTube handle.</p>
+                    <Link 
+                        to="/dashboard"
+                        className="inline-block bg-gradient-to-r from-blue-600 to-cyan-500 text-white font-bold py-3 px-12 rounded-xl hover:shadow-lg hover:shadow-blue-500/25 transition-all transform active:scale-[0.98]"
+                    >
+                        Go to Dashboard to Connect
+                    </Link>
+                </div>
+            </Layout>
+        );
+    }
+
+    if (!hasChannel) {
+        return (
+            <Layout>
+                <div className="max-w-2xl mx-auto mt-20 text-center border border-gray-800 bg-gray-900 p-12 rounded-3xl shadow-2xl relative overflow-hidden">
+                    <div className="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-blue-500 to-cyan-500"></div>
+                    <div className="w-20 h-20 bg-gray-950 rounded-2xl flex items-center justify-center mx-auto mb-6 border border-gray-800 shadow-xl">
+                        <MonitorPlay size={40} className="text-blue-500" />
+                    </div>
+                    <h2 className="text-3xl font-bold mb-4">Connect Your Channel</h2>
+                    <p className="text-gray-400 mb-8 max-w-md mx-auto">To predict the absolute best time to post based on your real audience activity, you must first connect your YouTube handle.</p>
+                    <Link 
+                        to="/dashboard"
+                        className="inline-block bg-gradient-to-r from-blue-600 to-cyan-500 text-white font-bold py-3 px-12 rounded-xl hover:shadow-lg hover:shadow-blue-500/25 transition-all transform active:scale-[0.98]"
+                    >
+                        Go to Dashboard to Connect
+                    </Link>
+                </div>
+            </Layout>
+        );
+    }
+
     return (
         <Layout>
             <div className="mb-10">
@@ -30,7 +75,7 @@ export default function BestTime() {
             <div className="bg-gray-900 border border-gray-800 rounded-2xl p-8 shadow-xl mb-8">
                 <form onSubmit={analyze} className="flex flex-col md:flex-row gap-4 max-w-2xl">
                     <input 
-                        type="text" placeholder="Your Niche or Audience Region"
+                        type="text" placeholder="Channel Topic (e.g. Cooking, Tech, Gaming)"
                         className="flex-1 bg-gray-950 border border-gray-700 rounded-xl px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all font-medium"
                         value={niche} onChange={e => setNiche(e.target.value)} required 
                     />

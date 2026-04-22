@@ -11,6 +11,8 @@ import CompetitorAnalysis from './pages/CompetitorAnalysis';
 import TrendingIdeas from './pages/TrendingIdeas';
 import BestTime from './pages/BestTime';
 import AdvancedStudio from './pages/AdvancedStudio';
+import ShortsRepurposer from './pages/ShortsRepurposer';
+import ContentCalendar from './pages/ContentCalendar';
 
 // Global Error Boundary — catches any render crash and shows a fallback
 // instead of a blank black screen
@@ -64,6 +66,16 @@ export default function App() {
           <Route path="/dashboard" element={
               <ProtectedRoute>
                   <ErrorBoundary><Dashboard /></ErrorBoundary>
+              </ProtectedRoute>
+          } />
+          <Route path="/shorts" element={
+              <ProtectedRoute>
+                  <ErrorBoundary><ShortsRepurposer /></ErrorBoundary>
+              </ProtectedRoute>
+          } />
+          <Route path="/calendar" element={
+              <ProtectedRoute>
+                  <ErrorBoundary><ContentCalendar /></ErrorBoundary>
               </ProtectedRoute>
           } />
           <Route path="/seo-studio" element={
