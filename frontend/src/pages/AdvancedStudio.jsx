@@ -50,22 +50,41 @@ export default function AdvancedStudio() {
         setLoading(false);
     };
 
-    const generateVisual = async (topic, styleVal) => {
+    const generateVisual = async (topic, styleVal, retryCount = 0) => {
         setImageLoading(true);
-        setImagePreview(null); // Clear old one immediately
+        setError(null);
+        
         try {
-            // Add a timestamp to bypass any caching
+            // Use a fresh seed every time
             const res = await api.post('/ai/generate-image-preview', { 
                 topic, 
                 style: styleVal,
-                _t: Date.now() 
+                _t: Date.now() + retryCount
             });
-            setImagePreview(res.data.image_url);
+            const imgUrl = res.data.image_url;
+
+            // Pre-verify the image actually loads before showing it
+            const img = new Image();
+            img.src = imgUrl;
+            img.onload = () => {
+                setImagePreview(imgUrl);
+                setImageLoading(false);
+            };
+            img.onerror = () => {
+                if (retryCount < 2) {
+                    console.log(`Image failed, retrying... (${retryCount + 1})`);
+                    generateVisual(topic, styleVal, retryCount + 1);
+                } else {
+                    setImagePreview(null);
+                    setImageLoading(false);
+                    setError("Thumbnail service is busy. Please click 'Try Again' in a few seconds.");
+                }
+            };
         } catch (e) {
-            console.error("Image gen failed");
+            console.error("Image gen failed", e);
+            setImageLoading(false);
+            setError("Failed to reach the image engine.");
         }
-        // Note: we don't set imageLoading to false here, 
-        // we wait for the <img> tag's onLoad event.
     };
 
     // Safe renderer for any value - handles strings, arrays, objects without crashing

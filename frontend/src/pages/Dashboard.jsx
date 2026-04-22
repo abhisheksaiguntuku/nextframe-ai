@@ -1,10 +1,12 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import Layout from '../components/Layout';
 import api from '../api/axios';
+import { AuthContext } from '../context/AuthContext';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import { MonitorPlay, Users, Eye, Video } from 'lucide-react';
 
 export default function Dashboard() {
+    const { refreshChannel } = useContext(AuthContext);
     const [data, setData] = useState(null);
     const [handle, setHandle] = useState('');
     const [loading, setLoading] = useState(false);
@@ -18,6 +20,9 @@ export default function Dashboard() {
         setLoading(true);
         try {
             await api.post('/channel/connect', { channel_handle: handle });
+            // Critical: Sync the global auth state so sidebar/links unlock immediately
+            await refreshChannel();
+            // Fetch dashboard stats for this component
             const res = await api.get('/channel/dashboard');
             setData(res.data);
         } catch (err) {
