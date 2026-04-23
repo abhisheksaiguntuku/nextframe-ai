@@ -31,4 +31,9 @@ app.include_router(ai.router, prefix="/ai", tags=["AI"])
 
 @app.get("/")
 async def root():
-    return {"message": "NextFrame AI API is live 🚀"}
+    return {"status": "online", "message": "NextFrame AI API is live 🚀"}
+
+@app.get("/health")
+async def health():
+    """Lightweight endpoint for keep-alive cronjobs."""
+    return {"status": "ok"}
