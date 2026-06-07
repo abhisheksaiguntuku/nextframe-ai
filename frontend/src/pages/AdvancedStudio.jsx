@@ -87,32 +87,36 @@ export default function AdvancedStudio() {
         }
     };
 
-    // Safe renderer for any value - handles strings, arrays, objects without crashing
+    // Safe recursive renderer for any value - handles strings, arrays, nested objects without crashing
     const renderValue = (v) => {
         if (v === null || v === undefined) return null;
         if (Array.isArray(v)) {
             return (
                 <ul className="list-disc list-inside space-y-2 ml-2 text-white">
                     {v.map((item, i) => (
-                        <li key={i}>{typeof item === 'object' ? JSON.stringify(item) : String(item)}</li>
+                        <li key={i}>
+                            {typeof item === 'object' ? renderValue(item) : String(item)}
+                        </li>
                     ))}
                 </ul>
             );
         }
         if (typeof v === 'object') {
             return (
-                <div className="space-y-2">
+                <div className="space-y-3 pl-3 border-l-2 border-purple-500/30">
                     {Object.entries(v).map(([subK, subV]) => (
-                        <p key={subK} className="text-gray-200 bg-gray-950 p-3 rounded-xl border border-gray-800">
-                            <span className="text-purple-300 font-bold">{subK}: </span>
-                            {String(subV)}
-                        </p>
+                        <div key={subK} className="text-gray-200 bg-gray-950 p-3 rounded-xl border border-gray-800">
+                            <span className="text-purple-300 font-bold">{subK.replace(/_/g, ' ')}: </span>
+                            <div className="mt-1">
+                                {typeof subV === 'object' ? renderValue(subV) : String(subV)}
+                            </div>
+                        </div>
                     ))}
                 </div>
             );
         }
         return (
-            <p className="text-gray-200 bg-gray-950 p-4 rounded-xl border border-gray-800 leading-relaxed">
+            <p className="text-gray-200 bg-gray-950 p-4 rounded-xl border border-gray-800 leading-relaxed whitespace-pre-wrap">
                 {String(v)}
             </p>
         );
